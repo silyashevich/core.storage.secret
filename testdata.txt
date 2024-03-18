@@ -1,0 +1,11 @@
+Secret message:
+test message
+
+Data (one-time):
+{"expiration":86400,"message":"-----BEGIN PGP MESSAGE-----\n\nwy4ECQMIbs//E3tGZXTgciilr0s9sqG0c/LC00w0QPYGhVGoxmFdiAbPCJyj\nEty50j0BmOgeagNBrI+oLxO19E9qMRbMYGSMzLQqjIo1Tqg9J28TRlwRKSrx\nckH9KmFPdhaZvOExTrj2esTx69VG\n=Xdut\n-----END PGP MESSAGE-----\n","one_time":true}
+Data (non one-time):
+{"expiration":86400,"message":"-----BEGIN PGP MESSAGE-----\n\nwy4ECQMIbs//E3tGZXTgciilr0s9sqG0c/LC00w0QPYGhVGoxmFdiAbPCJyj\nEty50j0BmOgeagNBrI+oLxO19E9qMRbMYGSMzLQqjIo1Tqg9J28TRlwRKSrx\nckH9KmFPdhaZvOExTrj2esTx69VG\n=Xdut\n-----END PGP MESSAGE-----\n","one_time":false}
+
+
+Decryption Key:
+xC4wrGe6nvKdEnhmpFDvYT

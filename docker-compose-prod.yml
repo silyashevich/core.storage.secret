@@ -1,0 +1,49 @@
+version: '3.9'
+
+services:
+  core.storage.secret.redis:
+    image: redis:alpine
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Moscow
+    command: "redis-server /usr/local/etc/redis/redis.conf"
+    volumes:
+      - core.storage.secret.redis-data:/data
+      - ./docker/config/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    networks:
+      - core.storage.secret-network
+
+  core.storage.secret.app:
+    image: silyashevich/core.storage.secret:latest
+    restart: unless-stopped
+    depends_on:
+      - core.storage.secret.redis
+    environment:
+      - REDIS_URL=redis://core.storage.secret.redis:6379
+      - PORT=2081
+    networks:
+      - core.storage.secret-network
+
+  core.storage.secret.nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    depends_on:
+      - core.storage.secret.redis
+      - core.storage.secret.app
+    volumes:
+      - ./docker/config/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8081:8081
+    networks:
+      - core.storage.secret-network
+
+volumes:
+  core.storage.secret.redis-data:
+    driver: local
+
+networks:
+  core.storage.secret-network:
+    name: core.storage.secret-network
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
