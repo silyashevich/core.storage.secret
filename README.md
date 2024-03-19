@@ -3,10 +3,29 @@
 
 This app provide api methods like yopass app with yopass-Redis database with no restrictions on the secret expiration value.
 
+## run/test
+
 Test store/download secret in [test.py](/test.py) with [https://github.com/silyashevich/yopass_api](https://github.com/silyashevich/yopass_api) encrypt/decrypt
 
+```shell
+make env/python-venv
+echo "prod" | make
+. ./.venv/bin/activate
+pip3 install yopass_api && python3 test.py
+echo "prod" | make docker-env/down
+```
 
-### POST secret
+## app image
+
+[https://hub.docker.com/r/silyashevich/core.storage.secret](https://hub.docker.com/r/silyashevich/core.storage.secret)
+
+```
+docker pull silyashevich/core.storage.secret
+```
+
+## actions
+
+### POST /secret
 
 For yopass compatibility expiration must be value 3600 or 86400 or 604800
 
@@ -26,11 +45,13 @@ Content-Length: 51
 Content-Type: application/json; charset=utf-8
 Date: Mon, 18 Mar 2024 22:55:49 GMT
 Server: nginx
+```
 
+```
 {"message": "3b64225b-65d0-4314-b465-a2c5b6c01709"}
 ```
 
-### GET secret
+### GET /secret/{message}
 
 ```shell
 curl --request GET \
@@ -44,11 +65,13 @@ Content-Length: 273
 Content-Type: application/json; charset=utf-8
 Date: Mon, 18 Mar 2024 23:02:06 GMT
 Server: nginx
+```
 
+```
 {"expiration": 86400, "message": "-----BEGIN PGP MESSAGE-----\n\nwy4ECQMIbs//E3tGZXTgciilr0s9sqG0c/LC00w0QPYGhVGoxmFdiAbPCJyj\nEty50j0BmOgeagNBrI+oLxO19E9qMRbMYGSMzLQqjIo1Tqg9J28TRlwRKSrx\nckH9KmFPdhaZvOExTrj2esTx69VG\n=Xdut\n-----END PGP MESSAGE-----\n", "one_time": true}
 ```
 
-### GET health
+### GET /health
 
 ```shell
 curl --request GET \
@@ -62,11 +85,13 @@ Content-Length: 7
 Content-Type: text/plain; charset=utf-8
 Date: Mon, 18 Mar 2024 23:05:50 GMT
 Server: nginx
+```
 
+```
 HEALTHY
 ```
 
-### GET metrics
+### GET /metrics
 
 ```shell
 curl --request GET \
@@ -80,7 +105,9 @@ Content-Length: 372
 Content-Type: text/plain; charset=utf-8
 Date: Mon, 18 Mar 2024 23:07:39 GMT
 Server: nginx
+```
 
+```
 http_requests_secret_post{server="4840728e858d"} 1
 http_requests_secret_post_ok{server="4840728e858d"} 1
 http_requests_secret_post_err{server="4840728e858d"} 0
