@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   core.storage.secret.redis:
+    container_name: core.storage.secret.redis
     image: redis:alpine
     restart: unless-stopped
     environment:
