@@ -23,12 +23,24 @@ docker-env/up:
 	&& echo "> ${blue}list containers${reset}" \
 	&& docker-compose -f ./docker-compose-$${task:-prod}.yml ps -a
 
+docker-env/dev/up:
+	@echo "> ${blue}run docker-compose up with docker-compose-dev.yml${reset}" \
+	&& docker-compose -f ./docker-compose-dev.yml up -d \
+	&& echo "> ${blue}list containers${reset}" \
+	&& docker-compose -f ./docker-compose-dev.yml ps -a
+
 docker-env/down:
 	@read -p "${green}run docker-compose file:${reset} [${bold}prod${reset}]/dev:" task \
 	&& echo "> ${blue}docker-compose down with docker-compose-$${task:-prod}.yml${reset}" \
 	&& docker-compose -f ./docker-compose-$${task:-prod}.yml down \
 	&& echo "> ${blue}list containers${reset}" \
 	&& docker-compose -f ./docker-compose-$${task:-prod}.yml ps -a
+
+docker-env/dev/down:
+	@echo "> ${blue}docker-compose down with docker-compose-dev.yml${reset}" \
+	&& docker-compose -f ./docker-compose-dev.yml down \
+	&& echo "> ${blue}list containers${reset}" \
+	&& docker-compose -f ./docker-compose-dev.yml ps -a
 
 docker-env/logs:
 	@read -p "${green}run docker-compose file:${reset} [${bold}dev${reset}]/prod:" task \

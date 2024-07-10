@@ -1,48 +1,48 @@
 version: '3.9'
 
 services:
-  core.storage.secret.keydb:
-    container_name: core.storage.secret.keydb
-    image: eqalpha/keydb
+  core.storage.secret.redis:
+    container_name: core.storage.secret.redis
+    image: redis:alpine
     restart: unless-stopped
     environment:
       - TZ=Europe/Moscow
-    command: keydb-server /etc/keydb/keydb.conf --server-threads 2
+    command: "redis-server /usr/local/etc/redis/redis.conf"
     ports:
       - 127.0.0.1:6379:6379
     volumes:
-      - core.storage.secret.redis-data:/data
-      - ./docker/config/redis.conf:/etc/keydb/keydb.conf:ro
+      - ./data/db/redis:/data
+      - ./docker/config/redis.conf:/usr/local/etc/redis/redis.conf:ro
     networks:
       - core.storage.secret-network
-
-  # core.storage.secret.redis:
-  #   container_name: core.storage.secret.redis
-  #   image: redis:alpine
-  #   restart: unless-stopped
-  #   environment:
-  #     - TZ=Europe/Moscow
-  #   command: "redis-server /usr/local/etc/redis/redis.conf"
-  #   ports:
-  #     - 127.0.0.1:6379:6379
-  #   volumes:
-  #     - core.storage.secret.redis-data:/data
-  #     - ./docker/config/redis.conf:/usr/local/etc/redis/redis.conf:ro
-  #   networks:
-  #     - core.storage.secret-network
-
+  core.storage.secret.keydb:
+    container_name: core.storage.secret.keydb
+    image: eqalpha/keydb:alpine
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Moscow
+    command: keydb-server /etc/keydb/keydb.conf
+    #command: keydb-server /etc/keydb/keydb.conf --server-threads 2
+    ports:
+      - 127.0.0.1:6378:6379
+    volumes:
+      - ./data/db/keydb:/data
+      - ./docker/config/keydb.conf:/etc/keydb/keydb.conf:ro
+    networks:
+      - core.storage.secret-network
   core.storage.secret.yopass:
     image: jhaals/yopass
     restart: unless-stopped
     environment:
       - TZ=Europe/Moscow
     command: "--metrics-port 999 --database redis --redis=redis://core.storage.secret.keydb:6379/0 --port 80"
+    #command: "--metrics-port 999 --database redis --redis=redis://core.storage.secret.redis:6379/0 --port 80"
     ports:
       - 127.0.0.1:888:80
       - 127.0.0.1:999:999
     depends_on:
+      - core.storage.secret.redis
       - core.storage.secret.keydb
-      # - core.storage.secret.redis
     networks:
       - core.storage.secret-network
 
