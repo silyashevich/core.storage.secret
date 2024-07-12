@@ -1,9 +1,11 @@
 version: '3.9'
 
 services:
+
   core.storage.secret.redis:
     container_name: core.storage.secret.redis
     image: redis:alpine
+    #user: 1000:1000
     restart: unless-stopped
     environment:
       - TZ=Europe/Moscow
@@ -15,9 +17,11 @@ services:
       - ./docker/config/redis.conf:/usr/local/etc/redis/redis.conf:ro
     networks:
       - core.storage.secret-network
+
   core.storage.secret.keydb:
     container_name: core.storage.secret.keydb
     image: eqalpha/keydb:alpine
+    #user: 1000:1000
     restart: unless-stopped
     environment:
       - TZ=Europe/Moscow
@@ -30,6 +34,23 @@ services:
       - ./docker/config/keydb.conf:/etc/keydb/keydb.conf:ro
     networks:
       - core.storage.secret-network
+
+  core.storage.secret.valkey:
+    container_name: core.storage.secret.valkey
+    image: valkey/valkey:7-alpine
+    #user: 1000:1000
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Moscow
+    command: valkey-server /etc/valkey/valkey.conf
+    ports:
+      - 127.0.0.1:6377:6379
+    volumes:
+      - ./data/db/valkey:/data
+      - ./docker/config/valkey.conf:/etc/valkey/valkey.conf:ro
+    networks:
+      - core.storage.secret-network
+
   core.storage.secret.yopass:
     image: jhaals/yopass
     restart: unless-stopped
@@ -43,12 +64,9 @@ services:
     depends_on:
       - core.storage.secret.redis
       - core.storage.secret.keydb
+      #- core.storage.secret.valkey
     networks:
       - core.storage.secret-network
-
-volumes:
-  core.storage.secret.redis-data:
-    driver: local
 
 networks:
   core.storage.secret-network:

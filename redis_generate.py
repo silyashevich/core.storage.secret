@@ -29,8 +29,8 @@ def conn_string_type(string):
 def generate_redis(source):
     src = connect_redis(source)
     srcPipe = src.pipeline()
-    with tqdm(total=100000) as pbar:
-        for i in range(100000):
+    with tqdm(total=10000) as pbar:
+        for i in range(10000):
             key = str(uuid.uuid4())
             srcPipe.set(key, "1")
             srcPipe.expire(key, 600)
