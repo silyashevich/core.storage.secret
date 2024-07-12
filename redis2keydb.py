@@ -62,5 +62,5 @@ def migrate_redis(source, destination):
 
 if __name__ == "__main__":
     source = conn_string_type("127.0.0.1:6379/0")
-    destination = conn_string_type("127.0.0.1:6378/0")
+    destination = conn_string_type("127.0.0.1:6377/0")
     migrate_redis(source, destination)

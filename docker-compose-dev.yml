@@ -64,7 +64,19 @@ services:
     depends_on:
       - core.storage.secret.redis
       - core.storage.secret.keydb
-      #- core.storage.secret.valkey
+      - core.storage.secret.valkey
+    networks:
+      - core.storage.secret-network
+
+  core.storage.secret.nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    depends_on:
+      - core.storage.secret.yopass
+    volumes:
+      - ./docker/config/nginx-dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8081:8081
     networks:
       - core.storage.secret-network
 
